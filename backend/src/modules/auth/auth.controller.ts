@@ -14,6 +14,7 @@ import express from 'express';
 import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentAdmin } from 'src/common/decorators/current-admin.decorator';
+import type { Admin } from '@prisma/client';
 
 
 @Controller('auth')
@@ -68,7 +69,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt')) // Kích hoạt Strategy
   @Get('me')
-  async authMe(@CurrentAdmin() admin) {
+  async authMe(@CurrentAdmin() admin: Admin) {
     // console.log(admin.username);
     return admin;
   }

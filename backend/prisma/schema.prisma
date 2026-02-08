@@ -7,48 +7,44 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
-
 model Admin {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  hashedPassword  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             Int      @id @default(autoincrement())
+  username       String   @unique
+  hashedPassword String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-
-  sessions  Session[] // virtual field, it wont't create column in db
+  sessions Session[] // virtual field, it wont't create column in db
 }
 
 model Session {
-  id           Int      @id @default(autoincrement())
-  token        String   @unique // Refresh token string (opaque)
-  expiresAt    DateTime
-  createdAt    DateTime @default(now())
-  
+  id        Int      @id @default(autoincrement())
+  token     String   @unique // Refresh token string (opaque)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
   // Quan hệ với Admin
-  adminId      Int
-  admin        Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  adminId Int
+  admin   Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
 }
 
-
 model Member {
-  id           Int      @id @default(autoincrement())
-  code         String   @unique // Mã thẻ / Mã QR
-  fullName     String
-  phoneNumber  String?
+  id          Int     @id @default(autoincrement())
+  code        String  @unique // Mã thẻ / Mã QR
+  fullName    String
+  phoneNumber String?
 
   // Dữ liệu AI (Lưu đường dẫn ảnh mẫu để train/compare)
-  faceImageUrl String?
+  faceImageUrl     String?
   isFaceRegistered Boolean @default(false)
 
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  checkIns     CheckIn[]
+  checkIns CheckIn[]
 }
 
 // --- BẢNG CHECK-IN (LỊCH SỬ RA VÀO) ---

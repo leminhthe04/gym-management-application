@@ -9,8 +9,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 @Module({
   imports: [
     ScheduleModule.forRoot(),
-    ConfigModule.forRoot({
-      isGlobal: true,
+    ConfigModule.forRoot({ 
+      isGlobal: true, 
     }),
     PrismaModule,
     AuthModule,

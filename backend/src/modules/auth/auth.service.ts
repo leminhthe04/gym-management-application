@@ -31,7 +31,7 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
-    const newAdmin = await this.prisma.admin.create({
+    await this.prisma.admin.create({
       data: { username: data.username, hashedPassword: hashedPassword },
     });
 
@@ -52,12 +52,14 @@ export class AuthService {
       throw new UnauthorizedException('Password is incorrect');
     }
 
-    const accessToken = await this.signTokens(admin.id, admin.username);
+    const accessToken = await this.signTokens(admin.id);
 
     const refreshToken = this.createRefreshToken();
     const refreshTokenExpiresAt = new Date(
       Date.now() + Number(this.config.get('REFRESH_TOKEN_TTL')),
     );
+
+    // console.log(refreshToken);
 
     await this.prisma.session.create({
       data: {
@@ -70,8 +72,8 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async signTokens(userId: number, username: string) {
-    const payload = { id: userId, username };
+  async signTokens(userId: number) {
+    const payload = { id: userId };
 
     const accessToken = await this.jwtService.signAsync(payload, {
       secret: this.config.get('ACCESS_TOKEN_SECRET'),
@@ -102,8 +104,7 @@ export class AuthService {
 
     // Tạo Access Token mới
     const newAccessToken = await this.signTokens(
-      session.adminId,
-      session.username,
+      session.adminId
     );
 
     return { accessToken: newAccessToken };

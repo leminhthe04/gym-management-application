@@ -1,0 +1,207 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "react-simple-keyboard/build/css/index.css";
+
+@tailwind utilities;
+
+/* =========================================
+   CUSTOM KEYBOARD STYLE (KIOSK MODE)
+   ========================================= */
+.hg-theme-default {
+  @apply !my-4 !bg-transparent;
+  font-family: inherit;
+}
+
+.hg-button {
+  @apply !h-16 !text-lg !font-semibold !rounded-md !transition-all !duration-100;
+  @apply !bg-white !text-slate-900 !border-b-[3px] !border-slate-300;
+  /* Shadow nhẹ tạo cảm giác nút vật lý */
+  box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.05);
+}
+
+.hg-button:active, .hg-activeButton {
+  @apply !bg-primary !text-primary-foreground !translate-y-[2px] !border-b-0;
+}
+
+/* Dark mode keyboard */
+.dark .hg-button {
+  @apply !bg-slate-800 !text-white !border-slate-900;
+}
+.dark .hg-button:active, .dark .hg-activeButton {
+  @apply !bg-primary !text-primary-foreground !border-b-0;
+}
+
+/* =========================================
+   TAILWIND CONFIG & THEME
+   ========================================= */
+@custom-variant dark (&:is(.dark *));
+@config "../tailwind.config.ts";
+
+@layer base {
+  :root {
+    /* THEME: GYM PRO (Light Mode)
+      Style: Clean, High Contrast, Industrial
+    */
+    
+    --background: 0 0% 100%;       /* Pure White */
+    --foreground: 240 10% 3.9%;    /* Almost Black */
+
+    /* Card System - Nổi bật trên nền trắng */
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    /* PRIMARY: ORANGE (Màu cam thể thao, năng động) */
+    --primary: 24.6 95% 53.1%;     /* #F97316 (Orange-500) */
+    --primary-foreground: 0 0% 98%; /* White text on Orange */
+
+    /* SECONDARY: Black/Gray accent */
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+
+    /* MUTED: Dùng cho text phụ, placeholder */
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+
+    /* ACCENT: Dùng cho hover states */
+    --accent: 24 95% 95%;          /* Very light orange fade */
+    --accent-foreground: 24.6 95% 53.1%;
+
+    /* DESTRUCTIVE: Red (Error/Delete) */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* SUCCESS: Green (Check-in OK) */
+    --success: 142.1 76.2% 36.3%;
+    --success-foreground: 355.7 100% 97.3%;
+
+    /* BORDERS & INPUTS */
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 24.6 95% 53.1%; /* Focus ring màu cam */
+
+    /* BORDER RADIUS: Cứng cáp hơn (0.5rem) thay vì tròn trịa (1rem) */
+    --radius: 0.5rem;
+
+    /* SIDEBAR (Admin) */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* THEME: GYM PRO (Dark Mode)
+      Style: Sleek, Modern, "Night Gym" vibe
+    */
+    --background: 20 14.3% 4.1%;   /* Deep Dark Warm Gray */
+    --foreground: 60 9.1% 97.8%;   /* Off White */
+
+    --card: 20 14.3% 4.1%;
+    --card-foreground: 60 9.1% 97.8%;
+
+    --popover: 20 14.3% 4.1%;
+    --popover-foreground: 60 9.1% 97.8%;
+
+    /* Primary giữ nguyên màu cam nhưng rực hơn 1 chút trên nền tối */
+    --primary: 20.5 90.2% 48.2%;   /* #EA580C (Orange-600) */
+    --primary-foreground: 60 9.1% 97.8%;
+
+    --secondary: 12 6.5% 15.1%;
+    --secondary-foreground: 60 9.1% 97.8%;
+
+    --muted: 12 6.5% 15.1%;
+    --muted-foreground: 24 5.4% 63.9%;
+
+    --accent: 12 6.5% 15.1%;
+    --accent-foreground: 60 9.1% 97.8%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 60 9.1% 97.8%;
+    
+    --success: 142 70% 25%;
+    --success-foreground: 60 9.1% 97.8%;
+
+    --border: 12 6.5% 15.1%;
+    --input: 12 6.5% 15.1%;
+    --ring: 20.5 90.2% 48.2%;
+
+    /* SIDEBAR DARK */
+    --sidebar-background: 20 14.3% 4.1%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+/* =========================================
+   UTILITY CLASSES (GYM SPECIFIC)
+   ========================================= */
+@layer components {
+  /* MEMBER STATUS BADGES */
+  .badge-active {
+    @apply bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800;
+  }
+  .badge-pending {
+    @apply bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800;
+  }
+  .badge-expired {
+    @apply bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700;
+  }
+
+  /* KIOSK SPECIFIC UTILS */
+  .kiosk-screen {
+    @apply min-h-screen w-full bg-background select-none overflow-hidden;
+  }
+
+  /* Hiệu ứng kính nhưng cứng cáp hơn */
+  .glass-panel {
+    @apply bg-white/80 dark:bg-black/80 backdrop-blur-md border border-border shadow-sm;
+  }
+
+  /* Nút bấm to cho màn cảm ứng */
+  .btn-touch {
+    @apply h-16 text-xl font-bold active:scale-95 transition-transform;
+  }
+
+  /* Scrollbar ẩn cho Kiosk (để đẹp hơn) */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Admin Dashboard Cards */
+  .stat-card {
+    @apply bg-card text-card-foreground rounded-lg border shadow-sm p-6 hover:shadow-md transition-shadow;
+  }
+}
+
+/* Sidebar Theme Variable mapping for Shadcn Sidebar */
+@theme inline {
+  --color-sidebar: var(--sidebar-background);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
