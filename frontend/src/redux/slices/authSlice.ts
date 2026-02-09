@@ -1,15 +1,9 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
 import { authService } from "@/services/authService";
 import { toast } from "sonner";
-import { type AuthState, type Admin } from "@/types/store";
+import { type AuthState } from "@/types/store";
 
-interface ReduxAuthState {
-  accessToken: string | null;
-  admin: Admin | null;
-  loading: boolean;
-}
-
-const initialState: ReduxAuthState = {
+const initialState: AuthState = {
   accessToken: null,
   admin: null,
   loading: false,
@@ -73,7 +67,6 @@ export const signOut = createAsyncThunk(
       toast.error("Sign out failed.");
     }
     // Logic clear state sẽ được xử lý ở extraReducers
-    // dispatch(resetChat()); // Reset chat store nếu cần
   }
 );
 
@@ -97,6 +90,19 @@ export const refresh = createAsyncThunk(
     }
   }
 );
+
+export const test = createAsyncThunk(
+  "auth/test",
+  async (_, { rejectWithValue }) => {
+    try {
+      const message = await authService.test();
+      toast.message(message);
+    } catch (error) {
+      console.error("Test error:", error);
+      return rejectWithValue(error);
+    }
+  }
+)
 
 // --- Slice ---
 
@@ -158,7 +164,7 @@ const authSlice = createSlice({
       .addCase(refresh.rejected, (state) => {
         state.accessToken = null;
         state.admin = null; // Clear user khi refresh fail (hết session)
-      });
+      })
   },
 });
 

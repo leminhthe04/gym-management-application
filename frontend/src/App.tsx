@@ -3,7 +3,8 @@ import { Toaster } from "sonner";
 import SignInPage from "@/pages/admin/SignInPage";
 import SignUpPage from "@/pages/admin/SignUpPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-import HomePage from "./pages/admin/HomePage";
+import AdminHomePage from "./pages/admin/AdminHomePage";
+import KioskHomePage from "./pages/kiosk/KioskHomePage";
 
 function App() {
 
@@ -18,7 +19,8 @@ function App() {
 
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>      {/* Wrap protected routes */}
-            <Route path="/" element={<HomePage />} />
+            <Route path="/admin" element={<AdminHomePage />} />
+            <Route path="/kiosk" element={<KioskHomePage />} />
           </Route>
         </Routes>
       </BrowserRouter>

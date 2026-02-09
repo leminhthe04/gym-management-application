@@ -44,7 +44,7 @@ export function SignInForm({
     try {
       // await signIn(username, password);
       await dispatch(signIn({ username, password })).unwrap(); 
-      navigate("/", { replace: true });
+      navigate("/admin", { replace: true });
     } catch (error) {
 
     }

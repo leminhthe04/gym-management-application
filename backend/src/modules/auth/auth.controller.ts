@@ -73,4 +73,12 @@ export class AuthController {
     // console.log(admin.username);
     return admin;
   }
+
+  @UseGuards(AuthGuard('jwt')) // Kích hoạt Strategy
+  @Get('test')
+  async test() {
+    return { message: "Testing..." };
+  }
+
+  
 }

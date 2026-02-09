@@ -17,11 +17,6 @@ async function bootstrap() {
   });
 
   app.use(cookieParser());
-
-  // app.useGlobalPipes(new ValidationPipe({
-  //   whitelist: true,
-  //   forbidNonWhitelisted: true,
-  // }));
   
   const port = config.get<number>('PORT') || 8387;
   await app.listen(port);

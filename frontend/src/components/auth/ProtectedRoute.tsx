@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks"; // Hook của ch
 import { fetchMe, refresh } from "@/redux/slices/authSlice";
 
 const ProtectedRoute = () => {
-  // 1. Lấy state từ Redux thay vì Zustand
   const { accessToken, admin, loading } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 

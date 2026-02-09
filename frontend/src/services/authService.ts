@@ -52,4 +52,9 @@ export const authService = {
 
     return response.data.accessToken;
   },
+
+  test: async () => {
+    const response = await api.get("auth/test");
+    return response.data.message;
+  }
 };

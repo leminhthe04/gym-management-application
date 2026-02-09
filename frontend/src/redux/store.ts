@@ -1,7 +1,9 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // Mặc định là localStorage
-import authReducer from "@/redux/slices/authSlice"; // Import slice từ feature
+import authReducer from "@/redux/slices/authSlice";
+import kioskReducer from "@/redux/slices/kioskSlice";
+import { broadcastMiddleware, initBroadcastListener } from "./middleware/broadcastMiddleware";
 
 // 1. Cấu hình Persist (Chỉ lưu những gì cần thiết)
 const persistConfig = {
@@ -13,7 +15,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authReducer, // Đăng ký authSlice vào store
   // sau này thêm: socket: socketReducer,
-  // sau này thêm: kiosk: kioskReducer,
+  kiosk: kioskReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -24,8 +26,11 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // Tắt check serializable để không lỗi với redux-persist
-    }),
+    }).concat(broadcastMiddleware),
 });
+
+
+initBroadcastListener(store);
 
 // 3. Tạo Persistor (Dùng để đồng bộ store với localStorage)
 export const persistor = persistStore(store);
