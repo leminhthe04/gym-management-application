@@ -1,10 +1,10 @@
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { Toaster } from "sonner";
 import SignInPage from "@/pages/admin/SignInPage";
 import SignUpPage from "@/pages/admin/SignUpPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-import AdminHomePage from "./pages/admin/AdminHomePage";
-import KioskHomePage from "./pages/kiosk/KioskHomePage";
+import AdminHomePage from "./pages/admin/AdminPage";
+import KioskHomePage from "./pages/kiosk/KioskPage";
 
 function App() {
 
@@ -14,6 +14,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* Public routes */}
+          <Route path="/" element={<Navigate to="/signin" replace />} />
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
 
@@ -22,6 +23,8 @@ function App() {
             <Route path="/admin" element={<AdminHomePage />} />
             <Route path="/kiosk" element={<KioskHomePage />} />
           </Route>
+
+          <Route path="*" element={<div className="p-10">404 - Không tìm thấy trang</div>} />
         </Routes>
       </BrowserRouter>
     </>

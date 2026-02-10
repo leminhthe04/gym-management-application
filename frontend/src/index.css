@@ -5,33 +5,6 @@
 @tailwind utilities;
 
 /* =========================================
-   CUSTOM KEYBOARD STYLE (KIOSK MODE)
-   ========================================= */
-.hg-theme-default {
-  @apply !my-4 !bg-transparent;
-  font-family: inherit;
-}
-
-.hg-button {
-  @apply !h-16 !text-lg !font-semibold !rounded-md !transition-all !duration-100;
-  @apply !bg-white !text-slate-900 !border-b-[3px] !border-slate-300;
-  /* Shadow nhẹ tạo cảm giác nút vật lý */
-  box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.05);
-}
-
-.hg-button:active, .hg-activeButton {
-  @apply !bg-primary !text-primary-foreground !translate-y-[2px] !border-b-0;
-}
-
-/* Dark mode keyboard */
-.dark .hg-button {
-  @apply !bg-slate-800 !text-white !border-slate-900;
-}
-.dark .hg-button:active, .dark .hg-activeButton {
-  @apply !bg-primary !text-primary-foreground !border-b-0;
-}
-
-/* =========================================
    TAILWIND CONFIG & THEME
    ========================================= */
 @custom-variant dark (&:is(.dark *));
@@ -204,4 +177,50 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+}
+
+
+/* Tùy chỉnh bàn phím cho Kiosk */
+.hg-theme-default {
+  @apply bg-zinc-100 p-2; /* Nền bàn phím */
+}
+
+.hg-button {
+  @apply h-14!; /* Chiều cao phím */
+  @apply rounded-xl!;
+  @apply font-bold! text-xl!;
+  @apply bg-white! shadow-sm! border-b-2! border-zinc-20!;
+  @apply active:bg-orange-100! active:border-orange-500!; /* Hiệu ứng bấm */
+}
+
+/* Phím chức năng (Enter, Backspace...) */
+.hg-button.hg-standardBtn {
+   @apply bg-zinc-200!;
+}
+
+/* Phím Enter màu cam */
+.hg-button[data-skbtn="{enter}"] {
+  @apply bg-orange-600! text-white! border-orange-700!;
+}
+
+/* Style cho nút Next (Tiếp theo) trên bàn phím */
+.hg-button[data-skbtn="{next}"] {
+  @apply bg-orange-600! text-white! border-orange-700!;
+  @apply grow-2!; /* Làm nút này dài gấp đôi nút thường */
+}
+
+/* Ẩn hiện bàn phím mượt mà */
+.keyboard-container {
+  @apply fixed bottom-0 left-0 w-full bg-zinc-200 shadow-[0_-4px_10px_rgba(0,0,0,0.1)] z-50;
+  @apply transition-transform duration-300 ease-in-out;
+}
+
+/* Khi ẩn: Trượt xuống dưới màn hình */
+.keyboard-hidden {
+  @apply translate-y-full;
+}
+
+/* Khi hiện: Trượt lên */
+.keyboard-visible {
+  @apply translate-y-0;
 }

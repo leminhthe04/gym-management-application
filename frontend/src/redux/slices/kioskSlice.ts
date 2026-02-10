@@ -1,24 +1,37 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { type KioskState } from "@/types/store";
+import { type KioskState, type KioskView } from "@/types/store";
+
 
 
 const initialState: KioskState = {
-    inputText: "",
-    count: 0,
+    currentView: "HOME",
+    // inputText: "",
+    // count: 0,
+    memberFormData: {
+        name: "",
+        phone: "",
+    }
 };
 
 const kioskSlice = createSlice({
     name: "kiosk",
     initialState,
     reducers: {
-        setInputText: (state, action: PayloadAction<string>) => {
-            state.inputText = action.payload;
-        },
-        incrementCount: (state) => {
-            state.count += 1;
+        // setInputText: (state, action: PayloadAction<string>) => {
+        //     state.inputText = action.payload;
+        // },
+        // incrementCount: (state) => {
+        //     state.count += 1;
+        // },
+        updateFormData: (state, action: PayloadAction<Partial<KioskState["memberFormData"]>>) => {
+            state.memberFormData = { ...state.memberFormData, ...action.payload };
         },
         resetKiosk: () => (initialState),
-        setAllState: (state, action: PayloadAction<KioskState>) => (action.payload),
+        setAllState: (_, action: PayloadAction<KioskState>) => (action.payload),
+    
+        navigateKiosk: (state, actions: PayloadAction<KioskView>) => {
+            state.currentView = actions.payload;
+        },
     }
 });
 

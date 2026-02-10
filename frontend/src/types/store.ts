@@ -11,7 +11,17 @@ export interface AuthState {
   error?: string | null;      
 }
 
+
+export type KioskView = "HOME" | "CHECK_IN" | 
+  "REGISTER" | "REGISTER_WALK_IN" | "REGISTER_MEMBER" | "REGISTER_MEMBER_2";
+
+
 export interface KioskState {
-  inputText: string,
-  count: number,
+  currentView: KioskView,
+  // inputText: string,
+  // count: number,
+  memberFormData: {
+    name: string,
+    phone?: string,
+  },
 }
