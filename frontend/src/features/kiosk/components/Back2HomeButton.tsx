@@ -8,7 +8,10 @@ const Back2HomeButton = () => {
   return (
     <Button
       variant="outline"
-      onClick={() => dispatch(kioskActions.navigateKiosk("HOME"))}
+      onClick={() => { 
+        dispatch(kioskActions.navigateKiosk("HOME"));  
+        dispatch(kioskActions.resetFormData());
+      }}
     >
       Trang chủ
     </Button>

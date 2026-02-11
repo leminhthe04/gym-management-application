@@ -186,11 +186,12 @@
 }
 
 .hg-button {
-  @apply h-14!; /* Chiều cao phím */
+  @apply m-0.5;
+  @apply h-16!; /* Chiều cao phím */
   @apply rounded-xl!;
   @apply font-bold! text-xl!;
-  @apply bg-white! shadow-sm! border-b-2! border-zinc-20!;
-  @apply active:bg-orange-100! active:border-orange-500!; /* Hiệu ứng bấm */
+  @apply bg-white! shadow-sm! border-b-2! ;
+  @apply active:bg-orange-100! active:border-white; /* Hiệu ứng bấm */
 }
 
 /* Phím chức năng (Enter, Backspace...) */
@@ -198,16 +199,10 @@
    @apply bg-zinc-200!;
 }
 
-/* Phím Enter màu cam */
-.hg-button[data-skbtn="{enter}"] {
-  @apply bg-orange-600! text-white! border-orange-700!;
-}
-
-/* Style cho nút Next (Tiếp theo) trên bàn phím */
-.hg-button[data-skbtn="{next}"] {
-  @apply bg-orange-600! text-white! border-orange-700!;
+.hg-button[data-skbtn="{space}"] {
   @apply grow-2!; /* Làm nút này dài gấp đôi nút thường */
 }
+
 
 /* Ẩn hiện bàn phím mượt mà */
 .keyboard-container {
@@ -217,10 +212,10 @@
 
 /* Khi ẩn: Trượt xuống dưới màn hình */
 .keyboard-hidden {
-  @apply translate-y-full;
+  transform: translateY(100%);
 }
 
 /* Khi hiện: Trượt lên */
 .keyboard-visible {
-  @apply translate-y-0;
+  transform: translateY(0);
 }

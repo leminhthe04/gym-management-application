@@ -24,9 +24,16 @@ const kioskSlice = createSlice({
         //     state.count += 1;
         // },
         updateFormData: (state, action: PayloadAction<Partial<KioskState["memberFormData"]>>) => {
+            console.log(action.payload)
             state.memberFormData = { ...state.memberFormData, ...action.payload };
         },
-        resetKiosk: () => (initialState),
+        resetFormData: (state) => {
+            state.memberFormData = { name: "", phone: "" };
+        },
+        resetKiosk: (state) => {
+            state.currentView = "HOME";
+            state.memberFormData = { name: "", phone: "" };
+        },
         setAllState: (_, action: PayloadAction<KioskState>) => (action.payload),
     
         navigateKiosk: (state, actions: PayloadAction<KioskView>) => {

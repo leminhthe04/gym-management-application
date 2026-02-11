@@ -1,23 +1,27 @@
 import React from "react";
 
 interface KioskInputFieldProps {
+  textValue: string;
+  onChange: (value: string) => void;
   label: string;
   icon: React.ReactNode;
   placeholder?: string;
   required?: boolean;
   error?: string;
-  registration?: any;
-  onFocus?: () => void; // Thêm prop này
+  onFocus?: () => void;
+  inputRef: React.Ref<HTMLInputElement>;
 }
 
 const KioskInputField = ({
+  textValue,
+  onChange,
   label,
   icon,
   placeholder,
   required,
   error,
-  registration,
   onFocus,
+  inputRef,
 }: KioskInputFieldProps) => {
   return (
     <div className="space-y-1">
@@ -36,15 +40,13 @@ const KioskInputField = ({
         </div>
 
         <input
+          ref={inputRef}
           type="text" // Luôn để text để tránh lỗi bàn phím ảo với input type number
+          value={textValue}
+          onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          {...registration}
           onFocus={onFocus} // Bắn sự kiện focus ra ngoài để bật bàn phím
-          // Tắt autocomplete của trình duyệt để không che bàn phím ảo
-          autoComplete="off"
-           // Mẹo: Để readOnly để không hiện bàn phím ảo native của điện thoại/tablet (nếu có)
-          // Nhưng vẫn cho phép script (keyboard ảo) ghi vào.
-          // Nếu test trên PC thấy không gõ được phím cứng thì bỏ readOnly đi.
+          autoComplete="off" // Tắt autocomplete của trình duyệt để không che bàn phím ảo
           className={`
                         w-full h-14 pl-12 pr-4 rounded-xl border-2 
                         text-xl font-semibold text-zinc-900 placeholder:text-zinc-300

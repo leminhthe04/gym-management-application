@@ -5,6 +5,8 @@ import SignUpPage from "@/pages/admin/SignUpPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AdminHomePage from "./pages/admin/AdminPage";
 import KioskHomePage from "./pages/kiosk/KioskPage";
+// import { VNKeys } from "./lib/VNKeys";
+// import { useEffect } from "react";
 
 function App() {
 
@@ -19,12 +21,17 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
 
           {/* Protected routes */}
-          <Route element={<ProtectedRoute />}>      {/* Wrap protected routes */}
+          <Route element={<ProtectedRoute />}>
+            {" "}
+            {/* Wrap protected routes */}
             <Route path="/admin" element={<AdminHomePage />} />
             <Route path="/kiosk" element={<KioskHomePage />} />
           </Route>
 
-          <Route path="*" element={<div className="p-10">404 - Không tìm thấy trang</div>} />
+          <Route
+            path="*"
+            element={<div className="p-10">404 - Không tìm thấy trang</div>}
+          />
         </Routes>
       </BrowserRouter>
     </>

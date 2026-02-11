@@ -20,7 +20,7 @@ const AdminHomePage = () => {
     const newWindow = window.open(
       "/kiosk",
       "KioskWindow",
-      "width=900,height=768,left=200,top=200",
+      "width=900,height=1000,left=0,top=0",
     );
     kioskWindowRef.current = newWindow;
     setIsKioskOpen(true);
