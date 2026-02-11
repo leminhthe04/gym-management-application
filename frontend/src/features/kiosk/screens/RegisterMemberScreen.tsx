@@ -34,9 +34,20 @@ const RegisterMemberScreen = () => {
   const dispatch = useAppDispatch();
   const savedData = useAppSelector((state) => state.kiosk.memberFormData);
 
-  const [activeFieldName, setActiveFieldName] = useState<
-    keyof RegisterFormData | null
-  >(null);
+
+  const { control, handleSubmit, setValue, getValues } =
+    useForm<RegisterFormData>({
+      resolver: zodResolver(registerSchema),
+      defaultValues: {
+        name: savedData.name || "",
+        phone: savedData.phone || "",
+      },
+    });
+
+
+
+  const [activeFieldName, setActiveFieldName] = 
+    useState<keyof RegisterFormData | null>(null);
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const phoneInputRef = useRef<HTMLInputElement>(null);
@@ -53,91 +64,65 @@ const RegisterMemberScreen = () => {
   const keyboardAreaRef = useRef<HTMLDivElement>(null);
   const inputAreaRef = useRef<HTMLDivElement>(null);
 
-  const { control, handleSubmit, setValue, getValues } =
-    useForm<RegisterFormData>({
-      resolver: zodResolver(registerSchema),
-      defaultValues: {
-        name: savedData.name || "",
-        phone: savedData.phone || "",
-      },
-    });
+
 
   const onSubmit = (data: RegisterFormData) => {
     dispatch(kioskActions.updateFormData(data));
     dispatch(kioskActions.navigateKiosk("REGISTER_MEMBER_2"));
   };
 
-  const handleInputFocus = (fieldName: keyof RegisterFormData) => {
-    setActiveFieldName(fieldName);
 
-    requestAnimationFrame(() => {
-      const current = getValues(fieldName) ?? "";
-      keyboardRef.current?.setInput(current, fieldName);
-    });
-    // console.log("focused", fieldName);
-  };
+
 
   const updateFieldValue = (
     fieldName: keyof RegisterFormData,
     value: string,
     isDeleting: boolean = false,
   ) => {
-
     const finalValue = isDeleting ? value : toVietnamese(value);
 
-    // console.log(`Keyboard changed:\nCurrent: ${getValues(fieldName)}, New Raw: ${value}, Final: ${finalValue}`);
-    
-
-    setValue(fieldName, finalValue, {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-
     dispatch(
+      // update Redux store only, form and keyboardRef will auto update via useEffect below
       kioskActions.updateFormData({
         ...savedData,
         [fieldName]: finalValue,
       }),
     );
-
-    keyboardRef.current?.setInput(finalValue, activeFieldName);
-    keyboardRef.current?.setCaretPosition(finalValue.length);
-
-    return finalValue;
   };
 
+
+
+
+  // Khi gõ phím ảo, convert nội dung thành tiếng Việt, cập nhật vào Redux store,
+  // giữ focus vào input đang gõ
   const onKeyboardChange = (newValue: string) => {
     if (!activeFieldName) return;
 
     const currentValue = getValues(activeFieldName) || "";
 
-
     const isDeleting = newValue.length < currentValue.length;
 
-    const finalValue = updateFieldValue(activeFieldName, newValue, isDeleting);
-    
-
-    // console.log("Final value after update:", finalValue);
+    updateFieldValue(activeFieldName, newValue, isDeleting);
 
     const activeInputRef = inputRefsMap[activeFieldName] || null;
-    // 4. GIỮ FOCUS + CARET
+    // 4. GIỮ FOCUS
     requestAnimationFrame(() => {
       if (activeInputRef?.current) {
         const input = activeInputRef.current;
         input.focus();
-
-        const length = finalValue.length;
-        input.setSelectionRange(length, length);
       }
     });
   };
 
+
+
+  
+  // Xử lý thêm sự kiện click ngoài để ẩn keyboard
   useEffect(() => {
     const handlePointerDown = (e: PointerEvent) => {
       const target = e.target as Node;
 
       const clickInsideInput = inputAreaRef.current?.contains(target);
-
       const clickInsideKeyboard = keyboardAreaRef.current?.contains(target);
 
       if (!clickInsideInput && !clickInsideKeyboard) {
@@ -152,6 +137,37 @@ const RegisterMemberScreen = () => {
     };
   }, []);
 
+  // Tác dụng: Khi Redux thay đổi (do màn hình kia nhập), Form và keyboardRef tự cập nhật theo.
+  useEffect(() => {
+    const currentValues = getValues();
+
+    // Danh sách các field cần sync
+    const fieldsToSync: (keyof RegisterFormData)[] = ["name", "phone"];
+
+    for (const field of fieldsToSync) {
+      const reduxVal: string = savedData[field] || "";
+      const localVal: string = currentValues[field] || "";
+
+      // Chỉ update nếu có sự khác biệt
+      if (reduxVal === localVal) continue;
+
+      // 1. Update Form
+      setValue(field, reduxVal, { shouldDirty: true, shouldValidate: true });
+
+      // 2. Nếu field này đang Active (đang gõ), update luôn Keyboard ảo
+      if (activeFieldName === field) {
+        keyboardRef.current?.setInput(reduxVal, field);
+        keyboardRef.current?.setCaretPosition(reduxVal.length);
+      }
+    }
+
+  }, [savedData]); // Dependency là savedData: Cứ Redux đổi là chạy hàm này
+
+
+
+
+
+
   return (
     <div className="relative h-full w-full bg-zinc-50 p-6 flex flex-col">
       {/* Header */}
@@ -164,20 +180,15 @@ const RegisterMemberScreen = () => {
           <h2 className="text-3xl md:text-4xl font-black text-zinc-900 uppercase tracking-tight">
             Thông tin <span className="text-orange-600">cá nhân</span>
           </h2>
-          
-          
         </div>
-
-        
 
         {/* Form Area */}
         {/* Thêm padding-bottom lớn (pb-80) để khi bàn phím hiện lên không che mất nội dung cuối */}
         <div className="flex-1 w-full max-w-3xl mx-auto px-6 py-4 overflow-y-auto pb-80">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-
-       <p className="text-right text-zinc-500 font-medium text-xs italic">
-            Tắt bộ gõ tiếng Việt nếu dùng bàn phím cứng
-          </p>
+            <p className="text-right text-zinc-500 font-medium text-xs italic">
+              Tắt bộ gõ tiếng Việt nếu dùng bàn phím cứng
+            </p>
 
             <div ref={inputAreaRef}>
               <Controller
@@ -191,7 +202,7 @@ const RegisterMemberScreen = () => {
                     required
                     textValue={field.value}
                     error={fieldState.error?.message}
-                    onFocus={() => handleInputFocus("name")}
+                    onFocus={() => setActiveFieldName("name")}
                     onChange={(value: string) => {
                       updateFieldValue("name", value);
                     }}
@@ -210,7 +221,7 @@ const RegisterMemberScreen = () => {
                     icon={<Phone />}
                     textValue={field.value ?? ""}
                     error={fieldState.error?.message}
-                    onFocus={() => handleInputFocus("phone")}
+                    onFocus={() => setActiveFieldName("phone")}
                     onChange={(value: string) => {
                       updateFieldValue("phone", value);
                     }}
@@ -220,7 +231,6 @@ const RegisterMemberScreen = () => {
               />
             </div>
 
-     
             {/* Nút Tiếp theo trên giao diện (Vẫn giữ) */}
             <div className="pt-4">
               <button
