@@ -32,7 +32,7 @@ export class AuthController {
   @Post('signin')
   @HttpCode(HttpStatus.OK)
   async signIn(
-    @Body() body: any,
+    @Body() body: any, 
     @Res({ passthrough: true }) res: express.Response,
   ) {
     const { accessToken, refreshToken } = await this.authService.signIn(body);

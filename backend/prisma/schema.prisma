@@ -2,15 +2,18 @@
 // npx prisma generate
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector]
 }
 
 model Admin {
-  id             Int      @id @default(autoincrement())
+  id             String   @id @default(cuid())
   username       String   @unique
   hashedPassword String
   createdAt      DateTime @default(now())
@@ -20,39 +23,23 @@ model Admin {
 }
 
 model Session {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   token     String   @unique // Refresh token string (opaque)
   expiresAt DateTime
   createdAt DateTime @default(now())
 
   // Quan hệ với Admin
-  adminId Int
-  admin   Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  adminId String
+  admin   Admin  @relation(fields: [adminId], references: [id], onDelete: Cascade)
 }
 
 model Member {
-  id          Int     @id @default(autoincrement())
-  code        String  @unique // Mã thẻ / Mã QR
-  fullName    String
-  phoneNumber String?
+  id    String  @id @default(cuid())
+  name  String
+  phone String? @unique
 
-  // Dữ liệu AI (Lưu đường dẫn ảnh mẫu để train/compare)
-  faceImageUrl     String?
-  isFaceRegistered Boolean @default(false)
+  faceVector Unsupported("vector(128)")
 
-  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  checkIns CheckIn[]
-}
-
-// --- BẢNG CHECK-IN (LỊCH SỬ RA VÀO) ---
-model CheckIn {
-  id          Int      @id @default(autoincrement())
-  memberId    Int
-  member      Member   @relation(fields: [memberId], references: [id])
-  checkInTime DateTime @default(now())
-  method      String   @default("FACE") // FACE, QR, MANUAL
-  status      String   @default("SUCCESS") // SUCCESS, FAILED
 }

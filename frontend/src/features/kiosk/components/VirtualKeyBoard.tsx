@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import Keyboard from "react-simple-keyboard";
 
 interface VirtualKeyBoardProps {
@@ -18,19 +18,48 @@ const VirtualKeyBoard = ({
   onChange,
   inputName,
 }: VirtualKeyBoardProps) => {
-  // const [layoutName, setLayoutName] = useState<"default" | "shift" | "numbers">(
-  //   "default",
-  // );
 
-  const [isShift, setIsShift] = useState<boolean>(false);
+const [internalLayout, setInternalLayout] = useState<string>("default");
+
+  const [isCaps, setIsCaps] = useState<boolean>(false);
+
+  const lastShiftPress = useRef<number>(0);
+
 
   useEffect(() => {
-    setIsShift(false);
+    setInternalLayout("default");
+    setIsCaps(false);
   }, [layoutType, inputName]);
 
+  const handleShift = () => {
+    const now = Date.now();
+    const DOUBLE_TAP_DELAY = 300;
+
+    if (isCaps) {
+      setIsCaps(false);
+      setInternalLayout("default");
+      lastShiftPress.current = 0;
+      return;
+    }
+
+    if (now - lastShiftPress.current < DOUBLE_TAP_DELAY) {
+      setIsCaps(true);
+      setInternalLayout("shift");
+    } else {
+      setInternalLayout((prev) => (prev === "default" ? "shift" : "default"));
+    }
+
+    lastShiftPress.current = now;
+  }
+
   const onKeyPress = (button: string) => {
-    if (button === "{shift}" || button === "{lock}") {
-      setIsShift((prev) => !prev);
+    if (button === "{shift}") {
+      handleShift();
+      return;
+    }
+
+    if (internalLayout === "shift" && !isCaps) {
+      setInternalLayout("default");
     }
   };
 
@@ -38,8 +67,18 @@ const VirtualKeyBoard = ({
     if (layoutType === "numbers") {
       return "numbers";
     }
-    return isShift ? "shift" : "default";
+    return internalLayout;
   };
+
+  const getShiftDisplay = () => {
+    if (isCaps) {
+      return "⇪";
+    }
+    if (internalLayout === "shift") {
+      return "🠱";
+    }
+    return "⇧";
+  }
 
   return (
     <div
@@ -75,7 +114,7 @@ const VirtualKeyBoard = ({
         }}
         display={{
           "{backspace}": "⌫",
-          "{shift}": "⬆",
+          "{shift}": getShiftDisplay(),
           "{space}": "⌴",
         }}
       />

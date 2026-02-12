@@ -1,0 +1,21 @@
+# docker-compose up -d
+
+version: '3.8'
+
+services:
+  postgres:
+    # Sử dụng image chính thức của pgvector
+    image: pgvector/pgvector:pg16
+    container_name: pgvector_container
+    restart: always
+    environment:
+      POSTGRES_USER: admin         # Tên đăng nhập
+      POSTGRES_PASSWORD: admin     # Mật khẩu
+      POSTGRES_DB: gym_project         # Tên database mặc định
+    ports:
+      - "5433:5432"                 # Map port 5432 của máy host vào container
+    volumes:
+      - pg_data:/var/lib/postgresql/data # Mount volume để giữ dữ liệu bền vững
+
+volumes:
+  pg_data:
