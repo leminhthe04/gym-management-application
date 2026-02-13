@@ -2,10 +2,17 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import KioskPage from "../kiosk/KioskPage";
 import { store } from "@/redux/store";
+import { FaceModelService } from "@/lib/faceModel";
 
 const AdminHomePage = () => {
   const kioskWindowRef = useRef<Window | null>(null);
   const [isKioskOpen, setIsKioskOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Gọi load face model sau khi login
+    // Không cần await, cứ để nó chạy ngầm (fire and forget)
+    FaceModelService.load();
+  }, []);
 
   // Hàm mở cửa sổ Kiosk
   const openKioskWindow = () => {
@@ -16,9 +23,9 @@ const AdminHomePage = () => {
     }
 
     // Mở cửa sổ mới tại route /kiosk
-    // Kích thước 1024x768 (chuẩn iPad/Kiosk)
+    const params = new URLSearchParams({ isParentAdmin: "true" });
     const newWindow = window.open(
-      "/kiosk",
+      `/kiosk?${params.toString()}`,
       "KioskWindow",
       "width=900,height=1000,left=0,top=0",
     );
@@ -32,7 +39,7 @@ const AdminHomePage = () => {
 
     const channel = new BroadcastChannel("kiosk_channel");
     channel.onmessage = (event) => {
-      if (!event.data) return; 
+      if (!event.data) return;
 
       // nhận được tín hiệu kiosk mở
       if (event.data.type === "SYSTEM/KIOSK_STARTED") {
@@ -74,7 +81,6 @@ const AdminHomePage = () => {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
-
       {/* --- LEFT PANEL: ADMIN HOMEPAGE --- */}
       <div className="w-1/2 h-full bg-white border-r border-gray-200 p-8 flex flex-col">
         <div className="mb-8">

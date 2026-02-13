@@ -8,7 +8,7 @@ const RegisterScreen = React.lazy(() => import("../screens/RegisterScreen"));
 const RegisterWalkInScreen = React.lazy(() => import("../screens/RegisterWalkIn"));
 const RegisterMemberScreen = React.lazy(() => import("../screens/RegisterMemberScreen"));
 const RegisterMember2Screen = React.lazy(() => import("../screens/RegisterMember2Screen"));
-
+const RegisterMemberSuccess = React.lazy(() => import("../screens/RegisterMemberSuccess"));
 
 const VIEW_COMPONENTS: Record<KioskView, React.ReactNode> = {
   HOME: <KioskHomeScreen />,
@@ -17,6 +17,7 @@ const VIEW_COMPONENTS: Record<KioskView, React.ReactNode> = {
   REGISTER_WALK_IN: <RegisterWalkInScreen />,
   REGISTER_MEMBER: <RegisterMemberScreen />,
   REGISTER_MEMBER_2: <RegisterMember2Screen />,
+  REGISTER_SUCCESS: <RegisterMemberSuccess />,
 };
 
 

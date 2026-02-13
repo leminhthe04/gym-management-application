@@ -1,7 +1,5 @@
 # docker-compose up -d
 
-version: '3.8'
-
 services:
   postgres:
     # Sử dụng image chính thức của pgvector

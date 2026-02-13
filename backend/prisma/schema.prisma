@@ -37,7 +37,6 @@ model Member {
   id    String  @id @default(cuid())
   name  String
   phone String? @unique
-
   faceVector Unsupported("vector(128)")
 
   createdAt DateTime @default(now())

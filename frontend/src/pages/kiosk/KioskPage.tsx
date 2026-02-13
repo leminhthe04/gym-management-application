@@ -7,7 +7,7 @@ const KioskPage = () => {
 
   const dispatch = useAppDispatch();
   const [isSynced, setIsSynced] = useState<boolean>(false);
-  
+
   useEffect(() => {
     // Kết nối vào kênh (cùng tên với kênh trong middleware)
     const channel = new BroadcastChannel("kiosk_channel");

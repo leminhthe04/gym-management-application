@@ -72,7 +72,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async signTokens(userId: number) {
+  async signTokens(userId: string) {
     const payload = { id: userId };
 
     const accessToken = await this.jwtService.signAsync(payload, {

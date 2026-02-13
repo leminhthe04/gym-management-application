@@ -3,12 +3,12 @@ import { Toaster } from "sonner";
 import SignInPage from "@/pages/admin/SignInPage";
 import SignUpPage from "@/pages/admin/SignUpPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-import AdminHomePage from "./pages/admin/AdminPage";
-import KioskHomePage from "./pages/kiosk/KioskPage";
-// import { VNKeys } from "./lib/VNKeys";
-// import { useEffect } from "react";
+import AdminPage from "./pages/admin/AdminPage";
+import KioskPage from "./pages/kiosk/KioskPage";
 
 function App() {
+
+
 
   return (
     <>
@@ -24,8 +24,8 @@ function App() {
           <Route element={<ProtectedRoute />}>
             {" "}
             {/* Wrap protected routes */}
-            <Route path="/admin" element={<AdminHomePage />} />
-            <Route path="/kiosk" element={<KioskHomePage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/kiosk" element={<KioskPage />} />
           </Route>
 
           <Route

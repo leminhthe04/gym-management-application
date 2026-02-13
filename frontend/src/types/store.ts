@@ -13,15 +13,21 @@ export interface AuthState {
 
 
 export type KioskView = "HOME" | "CHECK_IN" | 
-  "REGISTER" | "REGISTER_WALK_IN" | "REGISTER_MEMBER" | "REGISTER_MEMBER_2";
+  "REGISTER" | "REGISTER_WALK_IN" | "REGISTER_MEMBER" | "REGISTER_MEMBER_2" | "REGISTER_SUCCESS";
 
+
+export type MemberFormData = {
+  name: string;
+  phone: string;
+  faceImg: string | null;
+};
 
 export interface KioskState {
   currentView: KioskView,
   // inputText: string,
   // count: number,
-  memberFormData: {
-    name: string,
-    phone?: string,
-  },
+  memberFormData: MemberFormData,
+
+  registerStatus: "IDLE" | "LOADING" | "SUCCEEDED" | "FAILED";
+  registerError: string | null;
 }

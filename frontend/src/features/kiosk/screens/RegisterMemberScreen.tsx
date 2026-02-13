@@ -65,6 +65,8 @@ const RegisterMemberScreen = () => {
   const inputAreaRef = useRef<HTMLDivElement>(null);
 
 
+  const isKioskWindow = location.pathname.startsWith("/kiosk");
+
 
   const onSubmit = (data: RegisterFormData) => {
     dispatch(kioskActions.updateFormData(data));
@@ -84,7 +86,6 @@ const RegisterMemberScreen = () => {
     dispatch(
       // update Redux store only, form and keyboardRef will auto update via useEffect below
       kioskActions.updateFormData({
-        ...savedData,
         [fieldName]: finalValue,
       }),
     );
@@ -187,7 +188,7 @@ const RegisterMemberScreen = () => {
         <div className="flex-1 w-full max-w-3xl mx-auto px-6 py-4 overflow-y-auto pb-80">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <p className="text-right text-zinc-500 font-medium text-xs italic">
-              Tắt bộ gõ tiếng Việt nếu dùng bàn phím cứng
+              Tắt bộ gõ tiếng Việt (UniKey) nếu dùng bàn phím cứng
             </p>
 
             <div ref={inputAreaRef}>
@@ -252,6 +253,8 @@ const RegisterMemberScreen = () => {
         </div>
       </div>
 
+      {// uncomment when only want to show keyboard in kiosk window, not in admin mirror
+      // isKioskWindow && 
       <VirtualKeyBoard
         containerRef={keyboardAreaRef}
         parentClassName={cn(
@@ -262,7 +265,9 @@ const RegisterMemberScreen = () => {
         layoutType={activeFieldName === "phone" ? "numbers" : "default"}
         onChange={onKeyboardChange}
         inputName={activeFieldName || "default"}
-      />
+      />}
+
+
     </div>
   );
 };
